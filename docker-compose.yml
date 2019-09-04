@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+
+  dwhgen:
+    build:
+      context: .
+      dockerfile: Dockerfile.dwhgen
+
+  mssql:
+    build:
+      context: .
+      dockerfile: Dockerfile.mssql
+
+  postgres: 
+    build:
+      context: .
+      dockerfile: Dockerfile.psql
+
+  db2:
+    build: 
+      context: .
+      dockerfile: Dockerfile.db2
+    environment:
+      - DB2_COMMAND='select 1'
+    
+  flyway:
+    build:
+      context: .
+      dockerfile: Dockerfile.flyway
+
+  terraform:
+    build:
+      context: .
+      dockerfile: Dockerfile.terraform
