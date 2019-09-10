@@ -1,4 +1,6 @@
 FROM mcr.microsoft.com/mssql-tools
 
+RUN apt-get update && apt-get install -y parallel pass && rm -rf /var/lib/apt/lists/*
+
 ENV PATH "$PATH:/opt/mssql-tools/bin"
 CMD ["/bin/bash"]
