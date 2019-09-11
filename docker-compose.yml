@@ -6,6 +6,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dwhgen
+    environment:
+      - TF_SKIP_PROVIDER_VERIFY=1
+    volumes:
+      - workdir:/work
 
   mssql:
     build:
@@ -33,3 +37,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.terraform
+
+volumes:
+  workdir:
+    driver_opts:
+      device: $PWD
+      o: bind
+
