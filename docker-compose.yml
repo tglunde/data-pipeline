@@ -8,6 +8,7 @@ services:
       dockerfile: Dockerfile.dwhgen
     environment:
       - TF_SKIP_PROVIDER_VERIFY=1
+      - TF_DATA_DIR=/work/.terraform
     volumes:
       - workdir:/work
 
