@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 
-RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y sudo libxml2 file libnuma1 libaio1 sharutils binutils libstdc++6:i386 libpam0g:i386 python python-pip pass parallel && ln -s /lib/i386-linux-gnu/libpam.so.0 /lib/libpam.so.0
+RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y sudo libxml2 file libnuma1 libaio1 sharutils binutils libstdc++6:i386 libpam0g:i386 python python-pip pass parallel pigz && ln -s /lib/i386-linux-gnu/libpam.so.0 /lib/libpam.so.0
 
 RUN useradd -m -d /home/db2clnt -s /bin/bash -U --uid 1000 db2clnt 
 RUN pip install s3cmd==2.0.2

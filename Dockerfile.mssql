@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/mssql-tools
 
-RUN apt-get update && apt-get install -y parallel pass python python-pip && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y parallel pass python python-pip pigz && rm -rf /var/lib/apt/lists/*
 RUN pip install s3cmd==2.0.2
 ADD mssql_up.sh /bin/
 ADD mssql_exec /bin/
