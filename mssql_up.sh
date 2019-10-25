@@ -22,7 +22,7 @@ mssql_up () {
   fi
   mkdir -p /work/log
   mkfifo $PIPEFILE
-  bcp "select * from $schema.$table" queryout $PIPEFILE -t"|" -c -S $host,$port -d $db -U $user -P $pwd -a 65535 >/work/log/$fqn.msssql.log 2>&1 &
+  bcp "select * from $schema.$table" queryout $PIPEFILE -t"\t" -c -S $host,$port -d $db -U $user -P $pwd -a 65535 >/work/log/$fqn.msssql.log 2>&1 &
   pigz -c < $PIPEFILE | s3cmd put - s3://$bucket/$db/$schema/$table.csv.gz >/work/log/$fqn.s3c.log 2>&1 
   rm $PIPEFILE
 }
