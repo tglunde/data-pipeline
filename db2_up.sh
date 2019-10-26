@@ -9,6 +9,7 @@ setenv () {
   export schema=$5
   export tableregex=$6
   export bucket=$7
+  export ENV=UAT
 }
 
 db2_up () {
@@ -25,7 +26,7 @@ db2_up () {
   mkdir -p /work/log
   mkfifo $PIPEFILE
   db2 "export to $PIPEFILE of del modified by coldel, codepage=1208 select * from $schema.$table " >/work/log/$fqn.db2.log 2>&1 &
-  pigz -c < $PIPEFILE | s3cmd put - s3://$bucket/$db/$schema/$table.csv.gz >/work/log/$fqn.s3c.log 2>&1 
+  pigz -c < $PIPEFILE | s3cmd put - s3://$bucket/$env/$db/$schema/$table.csv.gz >/work/log/$fqn.s3c.log 2>&1 
   rm $PIPEFILE
 }
 

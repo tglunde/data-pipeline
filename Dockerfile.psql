@@ -1,3 +1,5 @@
 FROM postgres:11.5-alpine
 ADD psql.sh /psql.sh
+ADD psql_file.sh /psql_file.sh
 RUN chmod 755 /psql.sh
+RUN chmod 755 /psql_file.sh
