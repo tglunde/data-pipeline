@@ -17,4 +17,10 @@ ADD db2_up.sh /home/db2clnt/
 ADD db2_exec /home/db2clnt/
 RUN chmod 755 /home/db2clnt/db2_up.sh
 RUN chmod 755 /home/db2clnt/db2_exec
+
+# projbin
+ADD projbin /projbin
+ADD .projenv /.projenv
+
+# 
 CMD [ "/home/db2clnt/db2_exec" ] 
