@@ -15,12 +15,13 @@ COPY  db2rtcl.rsp /install/
 RUN /install/rtcl/db2setup -r /install/db2rtcl.rsp
 ADD db2_up.sh /home/db2clnt/
 ADD db2_exec /home/db2clnt/
+ADD upload.sh /upload.sh
+RUN chmod 755 /upload.sh
 RUN chmod 755 /home/db2clnt/db2_up.sh
 RUN chmod 755 /home/db2clnt/db2_exec
 
 # projbin
 ADD projbin /projbin
-ADD .projenv /.projenv
 
 # 
 CMD [ "/home/db2clnt/db2_exec" ] 

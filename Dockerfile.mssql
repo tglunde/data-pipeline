@@ -4,7 +4,12 @@ RUN apt-get update && apt-get install -y parallel pass python python-pip pigz &&
 RUN pip install s3cmd==2.0.2
 ADD mssql_up.sh /bin/
 ADD mssql_exec /bin/
+ADD mssql_down.sh /bin/
 RUN chmod 755 /bin/mssql_up.sh
 RUN chmod 755 /bin/mssql_exec
-ENV PATH "$PATH:/opt/mssql-tools/bin"
+RUN chmod 755 /bin/mssql_down.sh
+ADD upload.sh /bin/
+RUN chmod 755 /bin/upload.sh
+
+ENV PATH "$PATH:/opt/mssql-tools/bin:/bin"
 CMD ["/bin/mssql_exec"]

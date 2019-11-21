@@ -1,5 +1,10 @@
-FROM postgres:11.5-alpine
+FROM postgres:12.1
+RUN apt-get update && apt-get install -y python python-pip pass parallel pigz
+RUN pip install s3cmd==2.0.2
+
 ADD psql.sh /psql.sh
 ADD psql_file.sh /psql_file.sh
+ADD upload.sh /upload.sh
+RUN chmod 755 /upload.sh
 RUN chmod 755 /psql.sh
 RUN chmod 755 /psql_file.sh

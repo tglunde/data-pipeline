@@ -5,7 +5,7 @@ export BUCKET=tuid-dv01-s3-kampdb
 export SEU=P
 export PROFILENAME=KampDB
 
-exit 0
+#exit 0
 
 ## usage example
 #
