@@ -1,4 +1,2 @@
 #!/bin/bash
-sudo -Eu db2clnt bash -c 'export HOME=/home/db2clnt && source /home/db2clnt/.profile && /home/db2clnt/db2_up.sh $DB_PORT $DB_HOST $DB_DB $DB_USER $DB_SCHEMA $DB_TABLE $BUCKET'
-
-
+/home/db2clnt/upload.sh $DB_PORT $DB_HOST $DB_DB $DB_USER $DB_SCHEMA $DB_TABLE $BUCKET GLU db2

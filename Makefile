@@ -1,5 +1,6 @@
 ## 
-BUILD_TAG=tcsb-v0.2rc
+BUILD_TAG=v1.0rc1
+BUILD_TAG=latest
 
 all_docker_images: .Dockerfile.db2.build
 
