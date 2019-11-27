@@ -1,6 +1,6 @@
 
-docker build -f Dockerfile.db2 -t ai-dw/db2:latest-rc .
+make
 
-echo  docker run -it --rm ai-dw/db2:latest-rc bash
+echo make testrun
 
 
