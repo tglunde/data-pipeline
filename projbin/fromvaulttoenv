@@ -1,0 +1,18 @@
+#!/bin/sh
+
+[ -z "$SALT" ] && {  echo "SALT not found in environemnt" 1>&2 ; exit 1 ; }
+
+CRED_LINE=$(s3cmd get s3://${BUCKET}/${SALT} - | /projbin/dec.sh $SALT | grep ${SDE}\:${PROFILENAME})
+
+CREDUSER=$(echo $CRED_LINE | cut -f 3)
+CREDPWD=$(echo $CRED_LINE | cut -f 4)
+
+# after setting CREDUSER/PWD: both are empty, when exit 
+[ -z "$CRED_LINE" ] && { echo "${SDE}\t${PROFILENAME} not found" 2>&1 ;  exit 2 ; }
+
+## TODO: extend here for setting other variables (host, port, dbanme, schemaname, etc.)
+
+# generic
+export CREDUSER
+export CREDPWD
+

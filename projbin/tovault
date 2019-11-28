@@ -1,0 +1,15 @@
+#!/bin/sh
+
+[ -z "$SALT" ] && {  echo "SALT not found in environemnt" 1>&2 ; exit 1 ; }
+
+echo ${SDE}\t${PROFILENAME}
+echo USER?
+read CREDUSER
+echo PWD?
+read CREDPWD
+NPWD="${SDE}\t${PROFILENAME}\t${CREDUSER}\t${CREDPWD}"
+echo $NPWD
+echo $NPWD | /projbin/enc > "${SALT}.new"
+
+
+

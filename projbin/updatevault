@@ -1,0 +1,12 @@
+#!/bin/sh
+
+[ -z "$SALT" ] && {  echo "SALT not found in environemnt" 1>&2 ; exit 1 ; }
+
+# OLD_CRED_LINE=$(s3cmd get s3://$BUCKET/$SALT - | /projbin/dec.sh $SALT | grep ${SDE}\:${PROFILENAME})
+NEW_CRED_LINE="${SDE}\t${PROFILENAME}\t${CREDUSER}\t${CREDPWD}"
+
+
+{ s3cmd get s3://${BUCKET}/${SALT} - | /projbin/dec ${SALT} | grep -v ${SDE}\:${PROFILENAME} ;  echo $NEW_CRED_LINE ; } | /projbin/enc > ${SALT}.new
+
+s3cmd put ${SALT}.new s3://${BUCKET}/${SALT} && rm -f ${SALT}.new
+
