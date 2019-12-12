@@ -22,6 +22,8 @@ RUN chmod 755 /home/db2clnt/upload*.sh; chmod 755 /home/db2clnt/db2_exec; chown 
 #RUN pip install s4cmd==2.1.0
 RUN pip install s3cmd==2.0.2 
 RUN pip install awscli
+#RUN pip install jaydeapi 
+RUN pip install ibm_db==2.0.9
 
 
 
