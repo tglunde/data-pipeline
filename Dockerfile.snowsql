@@ -4,13 +4,14 @@ RUN apt-get update && apt-get --assume-yes install  curl gnupg
 
 # Create non-root user
 RUN groupadd --system snowflake --gid 444 && \
-useradd --uid 444 --system --gid snowflake --home-dir /home/snowflake --create-home --shell /sbin/nologin --comment "Docker image user" snowflake && \
+useradd --uid 444 --system --gid snowflake --home-dir /home/snowflake --create-home --shell /sbin/nologin --comment "snowflake user" snowflake && \
 chown -R snowflake:snowflake /home/snowflake
 
 # default to being in the user's home directory
 WORKDIR /home/snowflake
 
-ARG VERSION=1.2.0
+ARG VERSION=1.2.1
+ARG BOOTSTRAP_VERSION=1.2
 
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
@@ -21,8 +22,8 @@ ENV SNOWSQL_LOGIN_SHELL /home/snowflake/.bashrc
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys EC218558EABB25A1
 
 # Get SnowSQL
-RUN curl -o snowsql-${VERSION}-linux_x86_64.bash https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-${VERSION}-linux_x86_64.bash && \
-   curl -o snowsql-${VERSION}-linux_x86_64.bash.sig https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-${VERSION}-linux_x86_64.bash.sig && \
+RUN curl -o snowsql-${VERSION}-linux_x86_64.bash https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/${BOOTSTRAP_VERSION}/linux_x86_64/snowsql-${VERSION}-linux_x86_64.bash && \
+   curl -o snowsql-${VERSION}-linux_x86_64.bash.sig https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/${BOOTSTRAP_VERSION}/linux_x86_64/snowsql-${VERSION}-linux_x86_64.bash.sig && \
    gpg --verify snowsql-${VERSION}-linux_x86_64.bash.sig snowsql-${VERSION}-linux_x86_64.bash && \
    bash snowsql-${VERSION}-linux_x86_64.bash && \
    rm -f snowsql-${VERSION}-linux_x86_64.bash snowsql-${VERSION}-linux_x86_64.bash.sig
