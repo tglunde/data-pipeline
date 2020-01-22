@@ -24,6 +24,7 @@ RUN pip install s3cmd==2.0.2
 RUN pip install awscli
 #RUN pip install jaydeapi 
 RUN pip install ibm_db==2.0.9
+#RUN pip install ibm_db==3.0.1
 
 
 
