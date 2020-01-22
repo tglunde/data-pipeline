@@ -35,7 +35,15 @@ RUN echo "export LANGUAGE=en_US.UTF-8" >> ~/.bashrc
 RUN ln -s /opt/mssql-tools/bin/sqlcmd /bin/sqlcmd
 RUN ln -s /opt/mssql-tools/bin/bcp /bin/bcp
 COPY --from=terraform-bundler-build /go/terraform-bundle/* /usr/local/bin/
-ADD mssql_up.sh /bin/
+
+# ADD mssql_up.sh /bin/
+
+
+# entrypoint
+COPY dwhgen-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
 
 SHELL ["/bin/bash", "-c"]
 
