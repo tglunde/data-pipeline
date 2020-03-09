@@ -2,7 +2,8 @@ FROM ubuntu:latest AS db2base
 
 RUN dpkg --add-architecture i386 && \
   apt-get update && \
-  apt-get install -y gosu sudo libxml2 file libnuma1 libaio1 sharutils binutils libstdc++6:i386 libpam0g:i386 python python-pip pypy pass parallel pigz vim && \
+  apt-get install -y gosu sudo libxml2 file libnuma1 libaio1 sharutils binutils libstdc++6:i386 libpam0g:i386 \
+	 python python-pip pass parallel pigz vim && \
   ln -s /lib/i386-linux-gnu/libpam.so.0 /lib/libpam.so.0
 
 RUN useradd -m -d /home/db2clnt -s /bin/bash -U --uid 1000 db2clnt 
@@ -28,9 +29,9 @@ RUN chmod 755 /home/db2clnt/upload*.sh; chmod 755 /home/db2clnt/db2_exec; chown 
 #RUN pip install s4cmd==2.1.0
 RUN pip install s3cmd==2.0.2 
 RUN pip install awscli
-#RUN pip install jaydeapi 
-RUN pip install ibm_db==2.0.9
-#RUN pip install ibm_db==3.0.1
+#RUN pip install jaydebeapi 
+##RUN pip install ibm_db==2.0.9
+RUN pip install ibm_db==3.0.1
 
 
 
