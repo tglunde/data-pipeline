@@ -13,7 +13,8 @@ echo $TABLENAME_LIST
 for t in $TABLENAME_LIST
 do
   export table=$t
-  echo "starting upload for $schema.$table" ; date
+  echo "starting upload for $schema.$table"
+  date
   SHELL=$(type -p bash) sem --will-cite -j +0 upload "$db/$schema" "$table".csv.gz
 done
 echo waiting for all uploads to finish
