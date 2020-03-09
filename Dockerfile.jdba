@@ -1,0 +1,18 @@
+FROM python:3.8.1-slim-stretch
+
+
+# install python based software
+RUN pip install s5cmd
+RUN pip install awscli
+RUN pip install jaydebeapi 
+
+# entrypoint
+#COPY db2-entrypoint.sh /entrypoint.sh
+#RUN chmod +x /entrypoint.sh
+
+COPY *.jar /jdbc/
+
+# 
+#ENTRYPOINT ["/entrypoint.sh"]
+#CMD [ "/home/db2clnt/db2_exec" ] 
+CMD ["bash"]
