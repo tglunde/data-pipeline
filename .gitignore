@@ -1,4 +1,5 @@
 *.tar.gz
+*.jar
 credential
 log/**
 .Dockerfile*build
