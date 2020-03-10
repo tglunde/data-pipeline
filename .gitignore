@@ -1,5 +1,7 @@
 *.tar.gz
 *.jar
+*.tgz
+*.sha256sum
 credential
 log/**
 .Dockerfile*build
