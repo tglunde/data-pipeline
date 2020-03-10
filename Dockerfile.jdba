@@ -1,18 +1,102 @@
-FROM python:3.8.1-slim-stretch
+#FROM python:3.8.2-buster
+FROM ubuntu:18.04
 
+# install adoptopenjdk
+ENV LANG='C.UTF-8' LC_ALL='C.UTF-8'
+ENV LANGUAGE='en_US:en'
+
+
+RUN apt-get update && \
+  apt-get install -y  --no-install-recommends curl ca-certificates fontconfig locales \
+	bash gosu sudo libxml2 file libaio1 sharutils  \
+	python3.8 python3.8-dev python3.8-distutils openssl zlibc lzma sqlite3 \
+	build-essential \
+	pass parallel pigz vim wget git \
+  && update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1 \
+  && echo "C.UTF-8 UTF-8" >> /etc/locale.gen \
+  && locale-gen en_US.UTF-8 \
+  && rm -rf /var/lib/apt/lists/*
+
+# python3.8.2
+ENV GPG_KEY=E3FF2839C048B25C084DEBE9B26995E310250568
+ENV PYTHON_VERSION=3.8.2
+RUN set -ex 		&& wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" 	&& wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
+   && export GNUPGHOME="$(mktemp -d)" 	&& gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" 	&& gpg --batch --verify python.tar.xz.asc python.tar.xz 	&& { command -v gpgconf > /dev/null && gpgconf --kill all || :; } 	&& rm -rf "$GNUPGHOME" python.tar.xz.asc 	&& mkdir -p /usr/src/python 	&& tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz 	&& rm python.tar.xz \
+   && cd /usr/src/python 	&& ./configure 	--enable-loadable-sqlite-extensions 		--enable-optimizations 		--enable-option-checking=fatal 		--enable-shared 		--with-system-expat 		--with-system-ffi 		--without-ensurepip 	&& make -j "$(nproc)" 	&& make install 	&& ldconfig 		&& find /usr/local -depth 		\( 			\( -type d -a \( -name test -o -name tests -o -name idle_test \) \) 			-o 			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) 		\) -exec rm -rf '{}' + 	&& rm -rf /usr/src/python 		&& python3 --version
+
+# pip
+ENV PYTHON_PIP_VERSION=20.0.2
+ENV PYTHON_GET_PIP_URL=https://github.com/pypa/get-pip/raw/d59197a3c169cef378a22428a3fa99d33e080a5d/get-pip.py
+ENV PYTHON_GET_PIP_SHA256=421ac1d44c0cf9730a088e337867d974b91bdce4ea2636099275071878cc189e
+RUN set -ex; 		wget -O get-pip.py "$PYTHON_GET_PIP_URL"; 	echo "$PYTHON_GET_PIP_SHA256 *get-pip.py" | sha256sum --check --strict -; 		python get-pip.py 		--disable-pip-version-check 		--no-cache-dir 		"pip==$PYTHON_PIP_VERSION" 	; 	pip --version; 		find /usr/local -depth 		\( 			\( -type d -a \( -name test -o -name tests -o -name idle_test \) \) 			-o 			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) 		\) -exec rm -rf '{}' +; 	rm -f get-pip.py
+
+# java jdk
+ENV JAVA_VERSION jdk-13.0.2+8_openj9-0.18.0
+
+RUN set -eux; \
+    ARCH="$(dpkg --print-architecture)"; \
+    case "${ARCH}" in \
+       ppc64el|ppc64le) \
+         ESUM='f71513e525172dfef695b7c27b25e151f232e05b2281648c2b794650c4970832'; \
+         BINARY_URL='https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13.0.2%2B8_openj9-0.18.0/OpenJDK13U-jdk_ppc64le_linux_openj9_13.0.2_8_openj9-0.18.0.tar.gz'; \
+         ;; \
+       s390x) \
+         ESUM='9e7b2e921710ecaf6d3c743616dc720ef10b7b75ba0b8820bf9f9550bfa52584'; \
+         BINARY_URL='https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13.0.2%2B8_openj9-0.18.0/OpenJDK13U-jdk_s390x_linux_openj9_13.0.2_8_openj9-0.18.0.tar.gz'; \
+         ;; \
+       amd64|x86_64) \
+         ESUM='aeecf6d30d0c847db81d07793cf97e5dc44890c29366d7d9f8f9f397f6c52590'; \
+         BINARY_URL='https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13.0.2%2B8_openj9-0.18.0/OpenJDK13U-jdk_x64_linux_openj9_13.0.2_8_openj9-0.18.0.tar.gz'; \
+         ;; \
+       *) \
+         echo "Unsupported arch: ${ARCH}"; \
+         exit 1; \
+         ;; \
+    esac; \
+    curl -LfsSo /tmp/openjdk.tar.gz ${BINARY_URL}; \
+    echo "${ESUM} */tmp/openjdk.tar.gz" | sha256sum -c -; \
+    mkdir -p /opt/java/openjdk; \
+    cd /opt/java/openjdk; \
+    tar -xf /tmp/openjdk.tar.gz --strip-components=1; \
+    rm -rf /tmp/openjdk.tar.gz;
+
+ENV JAVA_HOME=/opt/java/openjdk \
+    PATH="/opt/java/openjdk/bin:$PATH"
+ENV JAVA_TOOL_OPTIONS="-XX:+IgnoreUnrecognizedVMOptions -XX:+UseContainerSupport -XX:+IdleTuningCompactOnIdle -XX:+IdleTuningGcOnIdle"
+
+
+# install go
+ENV GOLANG_VERSION=1.14
+ADD go.tgz /usr/local/
+
+RUN export PATH="/usr/local/go/bin:$PATH" ; go version
+
+ENV GOPATH=/go
+ENV PATH=/go/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+RUN mkdir -p "$GOPATH/src" && mkdir -p "$GOPATH/bin" && chmod -R 777 "$GOPATH"
+
+ADD upload*.sh /home/bin/
+RUN chmod 755 /home/bin/upload*.sh
+
+# install go based software
+# s5cmd 
+RUN go get -u github.com/peakgames/s5cmd
 
 # install python based software
-RUN pip install s5cmd
-RUN pip install awscli
-RUN pip install jaydebeapi 
+RUN pip3 install awscli
 
-# entrypoint
-#COPY db2-entrypoint.sh /entrypoint.sh
-#RUN chmod +x /entrypoint.sh
-
-COPY *.jar /jdbc/
+RUN pip3 install JPype1==0.7.2
 
 # 
-#ENTRYPOINT ["/entrypoint.sh"]
-#CMD [ "/home/db2clnt/db2_exec" ] 
-CMD ["bash"]
+#RUN pip install jaydebeapi 
+RUN git clone https://github.com/baztian/jaydebeapi.git && \
+   cd jaydebeapi && \
+   python3 setup.py install
+
+# entrypoint
+COPY jdba-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# 
+ENTRYPOINT ["/entrypoint.sh"]
+CMD [ "bash" ] 

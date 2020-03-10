@@ -1,5 +1,5 @@
 ## 
-BUILD_TAG=tcsb-v1.2-SNAPSHOT
+BUILD_TAG=tcsb-v1.3-SNAPSHOT
 #BUILD_TAG=latest
 
 all_docker_images: \
@@ -28,7 +28,7 @@ all_docker_images: \
 	docker build -f Dockerfile.jython -t ai-dw/jython:$(BUILD_TAG) .
 	touch .Dockerfile.jython.$(BUILD_TAG).build
 
-.Dockerfile.jdba.$(BUILD_TAG).build: Dockerfile.jdba
+.Dockerfile.jdba.$(BUILD_TAG).build: Dockerfile.jdba jdba-entrypoint.sh
 	docker build -f Dockerfile.jdba -t ai-dw/jdba:$(BUILD_TAG) .
 	touch .Dockerfile.jdba.$(BUILD_TAG).build
 
