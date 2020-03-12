@@ -38,8 +38,9 @@ all_docker_images: \
 	touch .Dockerfile.snowsql.$(BUILD_TAG).build
 
 testrun:
-	docker run -it --rm ai-dw/db2:$(BUILD_TAG) bash
-	docker run -it --rm ai-dw/snowsql:$(BUILD_TAG) bash
+	#- docker run -it --rm ai-dw/db2:$(BUILD_TAG) bash
+	#- docker run -it --rm ai-dw/snowsql:$(BUILD_TAG)
+	- docker run -it --rm ai-dw/jdba:$(BUILD_TAG) bash
 
 clean:
 	rm .Dockerfile*.build
