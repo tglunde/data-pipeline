@@ -61,7 +61,7 @@ services:
       - db2datavol:/database
 
   jdba:
-    image: ai-dw/jdba:tcsb-v1.3-SNAPSHOT
+    image: ai-dw/jdba:tcsb-v1.4-SNAPSHOT
     volumes:
       - workdir:/work
 

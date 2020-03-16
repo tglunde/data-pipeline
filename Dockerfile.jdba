@@ -36,8 +36,10 @@ RUN chmod 755 /home/bin/upload*.sh
 # jdbc drivers
 COPY jdbc /jdbc
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
-ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk
 ENV LD_LIBRARY_PATH=$JAVA_HOME/lib/server/
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk
+ENV LD_LIBRARY_PATH=$JAVA_HOME/jre/lib/amd64/server/
+
 ENV PATH=$JAVA_HOME/bin:$PATH
 # set via entrypoint.sh: ENV CLASSPATH=/jdbc/
 
