@@ -1,5 +1,4 @@
 *.tar.gz
-*.jar
 *.tgz
 *.sha256sum
 credential
