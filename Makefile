@@ -9,8 +9,8 @@ all_docker_images: \
 	.Dockerfile.jdba.$(BUILD_TAG).build
 
 .Dockerfile.db2.$(BUILD_TAG).build: Dockerfile.db2 \
-	ibm_data_server_runtime_client_linuxx64_v11.5.tar.gz \
 	db2-entrypoint.sh \
+	ibm_data_server_driver_package_linuxx64_v11.5.tar.gz \
 	upload.sh db2*
 	docker build -f Dockerfile.db2 -t ai-dw/db2:$(BUILD_TAG) .
 	touch .Dockerfile.db2.$(BUILD_TAG).build

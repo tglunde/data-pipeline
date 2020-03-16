@@ -2,10 +2,15 @@
 set -a
 
 # adjust group id
-export NEWID=$(ls -dnu /work | cut -f3 -d' ' )
+[ -d /work ] && {
+  NEWID=$(ls -dnu /work | cut -f3 -d' ' ) ;
+  export NEWID=$NEWID ;
+}
 export CURRENTID=$(id -u)
 
+
 if [ -n "$NEWID" -a "$CURRENT_ID" != "$NEWID" ]; then
+    echo "setting ownership to $NEWID"
     usermod -u ${NEWID} db2clnt
 fi
 

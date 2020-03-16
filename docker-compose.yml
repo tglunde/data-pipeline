@@ -1,22 +1,14 @@
 version: "3"
 
-services:
 
-  upload:
-    image: ai-dw/psql:latest-tg
+services:
+  dwhgen:
+    image: ai-dw/dwhgen:latest
     environment:
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_DB=${DB_DB}
-      - DB_USER=${DB_USER}
-      - DB_SCHEMA=${DB_SCHEMA}
-      - DB_TABLE=${DB_TABLE}
-      - BUCKET=${BUCKET}
       - TF_SKIP_PROVIDER_VERIFY=1
       - TF_DATA_DIR=/work/.terraform
     volumes:
       - workdir:/work
-      - cfgdir:/root/.projenv
 
   mssql:
     image: ai-dw/mssql:latest
@@ -28,11 +20,70 @@ services:
       - DB_SCHEMA=${DB_SCHEMA}
       - DB_TABLE=${DB_TABLE}
       - BUCKET=${BUCKET}
-      - TF_SKIP_PROVIDER_VERIFY=1
-      - TF_DATA_DIR=/work/.terraform
     volumes:
       - workdir:/work
-      - cfgdir:/root/.projenv
+
+  postgres: 
+    image: ai-dw/psql:latest
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DB=${DB_DB}
+      - DB_USER=${DB_USER}
+      - DB_TABLE=${DB_TABLE}
+    volumes:
+      - workdir:/work
+
+
+  db2:
+    image: ai-dw/db2:tcsb-v1.0rc2
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DB=${DB_DB}
+      - DB_USER=${DB_USER}
+      - DB_SCHEMA=${DB_SCHEMA}
+      - DB_TABLE=${DB_TABLE}
+      - BUCKET=${BUCKET}
+      - AWS_CREDENTIAL_FILE=/work/aws-config
+    volumes:
+            - workdir:/work
+
+  mydb2:
+    image: ibmcom/db2
+    ports:
+      - "50000:50000"
+    environment:
+      - LICENSE=accept
+      - DB2INST1_PASSWORD=start123321
+      - DBNAME=testdb
+    volumes:
+      - db2datavol:/database
+
+  jdba:
+    image: ai-dw/jdba:tcsb-v1.3-SNAPSHOT
+    volumes:
+      - workdir:/work
+
+  snowsql:
+    image: ai-dw/snowsql:tcsb-v1.0rc2
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DB=${DB_DB}
+      - DB_USER=${DB_USER}
+      - DB_SCHEMA=${DB_SCHEMA}
+      - DB_TABLE=${DB_TABLE}
+      - BUCKET=${BUCKET}
+      - SNOWSQL_CREDENTIAL_FILE=/work/snowsql-config
+    volumes:
+            - workdir:/work
+        
+    
+  flyway:
+    image: ai-dw/flyway:latest
+    volumes:
+      - workdir:/work
 
 
 volumes:
@@ -40,9 +91,14 @@ volumes:
     driver_opts:
       device: $HOME/.projenv
       o: bind
-       
+
   workdir:
     driver_opts:
       device: $PWD
+      o: bind
+
+  db2datavol:
+    driver_opts:
+      device: /home/voigt/Workspace/Docker/data-pipeline/.db2data
       o: bind
 

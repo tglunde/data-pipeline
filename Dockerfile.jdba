@@ -23,7 +23,10 @@ RUN set -ex \
                 cmake \
                 util-linux-dev \
     && apk add --no-cache --virtual .java_bash_go_sudo \
-		openjdk11-jdk openjdk11-jre-headless bash go sudo
+		openjdk8 openjdk8-jre bash go sudo
+
+
+#		openjdk11-jdk openjdk11-jre-headless bash go sudo
 
 
 # data pipeline scripts
@@ -31,7 +34,13 @@ ADD upload*.sh /home/bin/
 RUN chmod 755 /home/bin/upload*.sh
 
 # jdbc drivers
-ADD *.jar /jdbc/
+COPY jdbc /jdbc
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk
+ENV LD_LIBRARY_PATH=$JAVA_HOME/lib/server/
+ENV PATH=$JAVA_HOME/bin:$PATH
+# set via entrypoint.sh: ENV CLASSPATH=/jdbc/
+
 
 # s5cmd & AWS CLI
 RUN go get -u github.com/peakgames/s5cmd
@@ -50,7 +59,7 @@ COPY jdba-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # 
-#ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD [ "bash" ] 
 
 RUN apk del .build-deps 
