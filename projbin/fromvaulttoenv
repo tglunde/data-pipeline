@@ -2,13 +2,14 @@
 
 [ -z "$SALT" ] && {  echo "SALT not found in environemnt" 1>&2 ; exit 1 ; }
 
-CRED_LINE=$(s3cmd get s3://${BUCKET}/${SALT} - | /projbin/dec.sh $SALT | grep ${RTE}\:${PROFILENAME})
-
-CREDUSER=$(echo $CRED_LINE | cut -f 3)
-CREDPWD=$(echo $CRED_LINE | cut -f 4)
+s3cmd get s3://${BUCKET}/${SALT} - | /projbin/dec $SALT | grep -P "$RTE\t$PROFILENAME" > /tmp/p
+echo "retrieved creds"
+CREDUSER=$( cat /tmp/p | cut -f 3)
+CREDPWD=$( cat /tmp/p | cut -f 4)
+rm /tmp/p
 
 # after setting CREDUSER/PWD: both are empty, when exit 
-[ -z "$CRED_LINE" ] && { echo "${RTE}\t${PROFILENAME} not found" 2>&1 ;  exit 2 ; }
+#[ -z "$CRED_LINE" ] && { echo "${RTE}\t${PROFILENAME} not found" 2>&1 ;  exit 2 ; }
 
 ## TODO: extend here for setting other variables (host, port, dbanme, schemaname, etc.)
 

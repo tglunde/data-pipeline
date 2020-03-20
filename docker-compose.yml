@@ -2,38 +2,25 @@ version: "3"
 
 services:
 
-  upload:
-    image: ai-dw/psql:latest-tg
+  download:
+    image: ai-dw/db2:latest
     environment:
+      - CREDUSER=${CREDUSER}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_DB=${DB_DB}
-      - DB_USER=${DB_USER}
       - DB_SCHEMA=${DB_SCHEMA}
       - DB_TABLE=${DB_TABLE}
+      - SALT=${SALT}
+      - RTE=${RTE}
+      - PROFILENAME=${PROFILENAME}
       - BUCKET=${BUCKET}
+      - MODULE=${MODULE}
       - TF_SKIP_PROVIDER_VERIFY=1
       - TF_DATA_DIR=/work/.terraform
     volumes:
       - workdir:/work
-      - cfgdir:/root/.projenv
-
-  mssql:
-    image: ai-dw/mssql:latest
-    environment:
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_DB=${DB_DB}
-      - DB_USER=${DB_USER}
-      - DB_SCHEMA=${DB_SCHEMA}
-      - DB_TABLE=${DB_TABLE}
-      - BUCKET=${BUCKET}
-      - TF_SKIP_PROVIDER_VERIFY=1
-      - TF_DATA_DIR=/work/.terraform
-    volumes:
-      - workdir:/work
-      - cfgdir:/root/.projenv
-
+      - cfgdir:/.projenv
 
 volumes:
   cfgdir:
@@ -41,8 +28,8 @@ volumes:
       device: $HOME/.projenv
       o: bind
        
-  workdir:
-    driver_opts:
-      device: $PWD
-      o: bind
+workdir:
+  driver_opts:
+    device: $PWD
+    o: bind
 

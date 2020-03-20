@@ -1,0 +1,12 @@
+{
+    "AssumedRoleUser": {
+        "AssumedRoleId": "AROAVWVBHQFOVW4N6EHVN:dv01", 
+        "Arn": "arn:aws:sts::392253899101:assumed-role/tuid-dv01-iam-ai-tap-csw-ciserver-01/dv01"
+    }, 
+    "Credentials": {
+        "SecretAccessKey": "cD8+0b4k7ydqnp3byfnIHZ4w0cneadGrHlbY9WNy", 
+        "SessionToken": "FwoGZXIvYXdzEPr//////////wEaDPv5fzQnuSv3pBHyUSKoAc7ldhrDjHq5SNZo144H2lNOdG2YVQGzbwE+6M3ukK7+3c+LoBePyd1yKUV3qZJalfHYKXvWn3cp83MwMXw3Ot9kj7VLIkS0fJuXbiGhSfQswmoKzO3UHJixkCgGLJ9an1GJP2Pxn5FmQ83wVN/PN+5DPygfaj+lZsVqzTorApl/WjXWg1n+q2uN5LjMIoEgZEW7AjNeDamMxSe4UGYEqQy4IjhyU9Hygyjlp5rvBTItSWK30b73r+4DPg/OKZ7jxeyaCYTFWLxOW+FNQYv51Iux83vNm1/6qon+kFsX", 
+        "Expiration": "2019-12-03T17:57:09Z", 
+        "AccessKeyId": "ASIAVWVBHQFOW54EZLUD"
+    }
+}
